@@ -18,9 +18,12 @@ export class LLVMIRViewerProvider implements vscode.TextDocumentContentProvider 
 	
 
 	provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
+		const workbenchConfig = vscode.workspace.getConfiguration();
+		const llvmversion = workbenchConfig.get('config.llvm-ir-viewer.llvm-version');
 		return new Promise((resolve, _reject) => {
 			const objFilePath = uri.path;
-            const cmd = `llvm-objcopy-14 --dump-section .llvmbc=- '${objFilePath}' | llvm-dis-14`;
+
+            const cmd = `llvm-objcopy-${llvmversion} --dump-section .llvmbc=- '${objFilePath}' | llvm-dis-${llvmversion}`;
             
 			const command = child_process.exec(cmd);
 
@@ -38,14 +41,11 @@ export class LLVMIRViewerProvider implements vscode.TextDocumentContentProvider 
 			command.on("close", (code: number) => {
 				if (code === 0) resolve(stdout);
 				else {
-					//utils.output.appendLine("Command Failed:");
-					//utils.output.appendLine(stderr.replace(/^/gm, "\t")); // indent stderr
 					throw new Error(stderr);
 				}
 			});
 
 			command.on("error", (error) => {
-				//utils.output.appendLine(`Command Failed: ${error.message}`);
 				throw new Error(error.message);
 			});
 		});
