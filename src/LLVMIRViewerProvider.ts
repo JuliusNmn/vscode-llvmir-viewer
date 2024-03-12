@@ -5,37 +5,17 @@ export class LLVMIRViewerProvider implements vscode.TextDocumentContentProvider 
 
 	public static register(context: vscode.ExtensionContext): vscode.Disposable {
 		const provider = new LLVMIRViewerProvider(context);
-		const providerRegistration = vscode.window.registerCustomEditorProvider(LLVMIRViewerProvider.viewType, provider);
+		const providerRegistration = vscode.workspace.registerTextDocumentContentProvider(LLVMIRViewerProvider.scheme, provider);
 		return providerRegistration;
 	}
 
-	private static readonly viewType = 'llvmirviewer';
+	static readonly scheme = 'llvmir';
 
 
 	constructor(
 		private readonly context: vscode.ExtensionContext
 	) { }
-	onDidChange?: vscode.Event<vscode.Uri> | undefined;
-	openCustomDocument(uri: vscode.Uri, openContext: vscode.CustomDocumentOpenContext, token: vscode.CancellationToken): vscode.CustomDocument | Thenable<vscode.CustomDocument> {
-		return { uri, dispose: (): void => {} };
-	}
-	resolveCustomEditor(document: vscode.CustomDocument, webviewPanel: vscode.WebviewPanel, token: vscode.CancellationToken): void | Thenable<void> {
-
-		// Setup initial content for the webview
-		webviewPanel.webview.options = {
-			enableScripts: true,
-		};
-		this.provideTextDocumentContent(document.uri).then((value: string) => {
-			let html = "<html><body><p style=\"font-family: monospace\">";
-			value.split("\n").forEach(line => {
-				html += line+"<br>\n";
-			});
-			html += "</p></body></html>";
-			webviewPanel.webview.html = html;
-		});
-		
-	}
-
+	
 
 	provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
 		return new Promise((resolve, _reject) => {
@@ -70,4 +50,6 @@ export class LLVMIRViewerProvider implements vscode.TextDocumentContentProvider 
 			});
 		});
 	}
+
+
 }

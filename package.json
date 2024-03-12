@@ -16,11 +16,10 @@
 	"categories": [
 		"Other"
 	],
-	"activationEvents": [],
 	"main": "./out/extension.js",
 	"languages": [
 		{
-		  "id": "binary",
+		  "id": "llvmir",
 		  "extensions": [
 			".o"
 		  ],
@@ -30,17 +29,63 @@
 		}
 	  ],
 	"contributes": {
-		"customEditors": [
+		"commands": [
 			{
-				"viewType": "llvmirviewer",
-				"displayName": "LLVM IR viewer",
-				"selector": [
-					{
-						"filenamePattern": "*.o"
-					}
-				]
+				"command": "llvm-ir-viewer.show-embedded-bitcode",
+				"title": "Show embedded LLVMIR",
+				"category": "Embedded LLVM IR Bytecode Viewer"
 			}
-		]
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "llvm-ir-viewer.show-embedded-bitcode",
+					"when": "resourceLangId == .o"
+				}
+			],
+			"editor/title": [
+				{
+					"command":  "llvm-ir-viewer.show-embedded-bitcode",
+					"when": "resourceExtname == .o",
+					"group": "navigation"
+				}
+			],
+			"editor/title/context": [
+				{
+					"command":  "llvm-ir-viewer.show-embedded-bitcode",
+					"when": "resourceExtname == .o",
+					"group": "navigation"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "llvm-ir-viewer.show-embedded-bitcode",
+					"when": "resourceExtname == .o",
+					"group": "navigation"
+				}
+			]
+		},
+		"configuration": {
+			"title": "LLVM IR Bytecode Viewer",
+			"properties": {
+				"config.llvm-ir-viewer.editorTitleBar": {
+					"type": "boolean",
+					"default": true,
+					"description": "Whether the title bar button shows the verbose output by default"
+				},
+				"config.llvm-ir-viewer.editorTitleBarContextMenu": {
+					"type": "boolean",
+					"default": true,
+					"description": "Whether the title bar button shows the verbose output by default"
+				},
+
+				"config.llvm-ir-viewer.explorerContextMenu": {
+					"type": "boolean",
+					"default": true,
+					"description": "Whether the title bar button shows the verbose output by default"
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
