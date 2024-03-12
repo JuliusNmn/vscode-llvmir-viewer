@@ -3,7 +3,7 @@
 	"displayName": "LLVM IR Viewer",
 	"description": "View LLVM IR contained in binaries using -fembed-bitcode",
 	"version": "0.0.1",
-	"publisher": "vscode-samples",
+	"publisher": "JuliusNaeumann",
 	"private": true,
 	"license": "MIT",
 	"repository": {
